@@ -5,31 +5,34 @@
 using namespace std; 
 
 
-pair<int,int*> RaccordeurRecursif::CoupeOptimale(MatInt2* distances,int x,int y,int tab[]){
+struct Node(){
+ int x;
+ int y;
+ int cout;
+ Node *pere;
+}
 
-    if(x<0 || x>distances->nColonnes()-1){
-      pair<int,int*> result;
-      result.first = 9999999;
-      result.second=tab;
-      return result;
-    }
-    
-    if(y<0){
-      pair<int,int*> result;
-      result.first = 0;
-      result.second=tab;
-      return result;
-    }
 
-    tab[y]=x;
+Node RaccordeurRecursif::CoupeOptimale(MatInt2* distances,Node n){
 
-    pair<int,int*> a= CoupeOptimale(distances,y-1,x-1,tab);
-    pair<int,int*> b= CoupeOptimale(distances,y-1,x,tab);
-    pair<int,int*> c= CoupeOptimale(distances,y-1,x+1,tab);
-    pair<int,int*> result;
-    result.first=distances->get(y, x)+ min( a.first, min(b.first , c.first));
-    result.second=tab;
-    return  result;
+  if(n.y<0)
+    return n;
+  
+  Node aa= {n.x,n.y-1,n.cout,n};
+  Node a= CoupeOptimale(distances,aa);
+  Node b=a;
+  Node c=a;
+  
+  if(n.x-1>=0){
+    Node bb= {n.x-1,n.y-1,n.cout,n};
+    b= CoupeOptimale(distances,bb);}
+  if(n.x+1<=(distances->nColonnes()-1)){
+    Node cc= {n.x+1,n.y-1,n.cout,n};
+    c= CoupeOptimale(distances,cc);}
+  
+  n.cout=distances->get(n.y, n.x)+ min( a.cout, min(b.cout , c.cout));
+
+  return n;
 }
   
 
@@ -38,23 +41,24 @@ int RaccordeurRecursif::calculerRaccord(MatInt2* distances, int* coupe)
   int hauteur = distances->nLignes();
   int largeur = distances->nColonnes();
   
-  int tab[hauteur]; 
-  int min=99999999;
-  
+  Node minNode;
+
   for(int x=0;x<largeur;x++){
+   Node tmp={x,hateur-1,0,null}
+   Node resultat=CoupeOptimale(distances,tmp);
+   
+   if (resultat.cout<min)
+    minNode=resultat
+ 
+ }
+ int y=0;
+  while(minNode!=null){
+    coupe[y]=minNode.x;
+    minNode=minNode.pere;
+  }  
 
-    pair<int,int*> tmp =CoupeOptimale(distances,x,hauteur-1,tab);
-    
-    if(tmp.first<min){
-        min=tmp.first;
-      for (int y = 0; y < hauteur; y++) 
-        coupe[y] = tmp.second[y];
-      
-    }
 
-}
-
-  return min;
+  return minNode.cout;
 }
 
 RaccordeurRecursif::~RaccordeurRecursif()
