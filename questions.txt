@@ -1,0 +1,6 @@
+3) Que représente e et E ?
+e : erreur entre pixel
+E: cumul des erreurs entre 2 blocs 
+
+4)
+
