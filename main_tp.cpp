@@ -70,7 +70,7 @@ int main(int argc, char **argv){
             tache.raccordeur = new RaccordeurSimple();
             break;
         case 3:
-            //tache.raccordeur = new RaccordeurRecursifNaif();
+            tache.raccordeur = new RaccordeurRecursif();
             break;
         case 4:
           
