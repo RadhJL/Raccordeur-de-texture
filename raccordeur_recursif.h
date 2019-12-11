@@ -6,8 +6,8 @@
 
 class RaccordeurRecursif : public Raccordeur {
 
+  virtual pair<int,int*> CoupeOptimale(MatInt2* distances, int x,int y,int tab[]);
   virtual int calculerRaccord(MatInt2* distances, int* coupe);
-
   virtual ~RaccordeurRecursif(); // destructeur
 
 };
