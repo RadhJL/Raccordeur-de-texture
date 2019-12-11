@@ -2,6 +2,8 @@
 #define	_RACCORDEUR_RECURSIF_H
 
 #include "raccordeur.h"
+#include <utility>
+using namespace std; 
 
 
 class RaccordeurRecursif : public Raccordeur {

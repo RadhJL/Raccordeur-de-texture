@@ -18,7 +18,7 @@ int main(int argc, char **argv){
     DescripteurTache tache;
     
     // valeurs par defaut
-    algo = 0;
+    algo = 3;
     tache.fichierImage = "gravier.tif";
     tache.racineNombreBlocs = 3;
     tache.recouvrement = 20;
