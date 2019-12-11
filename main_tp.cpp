@@ -5,7 +5,7 @@
 #include "descripteur_tache.h"
 #include "raccordeur.h"
 #include "raccordeur_simple.h"
-
+#include "raccordeur_recursif.h"
 
 
 int main(int argc, char **argv){
