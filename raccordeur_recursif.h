@@ -4,11 +4,11 @@
 #include "raccordeur.h"
 
 
-class Raccordeur_Recursif : public Raccordeur {
+class RaccordeurRecursif : public Raccordeur {
 
   virtual int calculerRaccord(MatInt2* distances, int* coupe);
 
-  virtual ~Raccordeur_Recursif(); // destructeur
+  virtual ~RaccordeurRecursif(); // destructeur
 
 };
 

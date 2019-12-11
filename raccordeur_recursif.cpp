@@ -1,7 +1,7 @@
 
 #include "raccordeur_recursif.h"
 
-int Raccordeur_Recursif::calculerRaccord(MatInt2* distances, int* coupe)
+int RaccordeurRecursif::calculerRaccord(MatInt2* distances, int* coupe)
 {
   int milieu = distances->nColonnes()/2;
   int hauteur = distances->nLignes();
@@ -22,7 +22,7 @@ int Raccordeur_Recursif::calculerRaccord(MatInt2* distances, int* coupe)
   return cout;
 }
 
-Raccordeur_Recursif::~Raccordeur_Recursif()
+RaccordeurRecursif::~RaccordeurRecursif()
 {
   // pas de ressources a liberer
 }
