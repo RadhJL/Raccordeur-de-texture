@@ -371,12 +371,13 @@ int Textureur::bestBlockIndex(Raccordeur* raccordeur, int vg, int vh) {
     int coutMin = INT_MAX;
     int res = -1;
     int voisinage = 0;
-    if (vh == -1)
+    if (vh == -1){
         if (vg == -1) {
             fprintf(stdout, "bestBlockIndex - deux voisins -1\n");
             return 0;
         }
         else voisinage = 1;
+    }    
     if (vg==-1) voisinage = 2;
     
     int *coupegd = new int[bloc_h];
@@ -401,6 +402,7 @@ int Textureur::bestBlockIndex(Raccordeur* raccordeur, int vg, int vh) {
                 break;
             }
         }  // switch
+       // printf("Block num %d cout = %d\n",i,cout);
         if (cout < coutMin) {
             coutMin = cout;
             res = i;
@@ -425,9 +427,12 @@ void Textureur::doAlgo(Raccordeur* raccordeur) {
             } else {
                 ind = randomBlockIndex();
             }
-            // fprintf(stderr, "xr=%d,yr=%d,bloc= %d\n", c, l, ind);
+            
+           // fprintf(stderr, "xr=%d,yr=%d,bloc= %d\n", c, l, ind);
+
             res_bindex->set(c, l, ind);
             placer_avec_bord(ind, c, l);
+            
             if (c > 0) {
                 int *coupe = new int[bloc_h];
                 Coupe_GD(raccordeur, &table_blocs[ind], &table_blocs[res_bindex->get(c-1, l)], coupe);
@@ -440,6 +445,8 @@ void Textureur::doAlgo(Raccordeur* raccordeur) {
                 ajuster_coupe_HB(c, l, coupe);
                 delete[] coupe;
             }
+
+
         }
     }
     screen->DisplayImage(im_res->GetLinePtr(0), res_w, res_h);
