@@ -1,94 +1,81 @@
 
 #include "raccordeur_recursif.h"
-#include <utility>
-#include<algorithm>
-using namespace std; 
-
-Node* Memo[100][100];
 
 
-Node * RaccordeurRecursif::MinChild(int choice,int y, int x){
-  if(choice==0){
-    int min1=min(Memo[y-1][x]->cout,min(Memo[y-1][x-1]->cout,Memo[y-1][x+1]->cout));
-    for(int i=x-1;i<x+2;i++)
-        if(Memo[y-1][i]->cout==min1)
+/*
+ MinChild renvoie le Node qui contient le cout minimal parmis les colonnes x-1 x x+1 de la ligne y-1
+ Ici on est sur que les Memo de ces 3 colonnes sont deja calculé (voir mini dans CoupeOpt) 
+*/
+
+Node * RaccordeurRecursif::MinChild(Node* **Memo,int min,int y, int x,int l){
+    
+    for(int i=x-1;i<=x+1;i++){
+        if(i<0 || i>l-1)
+          continue;
+        if(Memo[y-1][i]->cout==min){
           return Memo[y-1][i];
-  }else if(choice==1){
-    int min1=min(Memo[y-1][x]->cout,Memo[y-1][x-1]->cout);
-    for(int i=x-1;i<x+1;i++)
-        if(Memo[y-1][i]->cout==min1)
-          return Memo[y-1][i];
-  }
-  else if(choice==2){
-    int min1=min(Memo[y-1][x]->cout,Memo[y-1][x+1]->cout);
-    for(int i=x;i<=x+1;i++)
-        if(Memo[y-1][i]->cout==min1)
-          return Memo[y-1][i];
-  }
-  return NULL;
-
+        }
+      }
+        return NULL;
 }
-Node* RaccordeurRecursif::CoupeOptimale(MatInt2* distances,int y,int x){
 
+
+
+Node* RaccordeurRecursif::CoupeOpt(Node* **Memo,MatInt2* dist,int y,int x,int l){
+  
+  // Si le chemin minimal de la case y,x est deja calculé alors renvoyé
 
   if(Memo[y][x]!=NULL)
     return Memo[y][x];
-
   
+  //Si on est dans la premiere ligne, le chemin minimal est la case meme  
   if(y==0){
-    Memo[y][x]=new Node(x,distances->get(y,x),NULL);
-    return Memo[y][x];
+    return Memo[y][x]=new Node(x,dist->get(y,x),NULL);
   }
+     
+        
+    int val=CoupeOpt(Memo,dist,y-1,x,l)->cout;
+    int mini=min(val,
+                 min(x-1 >= 0   ? CoupeOpt(Memo,dist,y-1,x-1,l)->cout:val,
+                     x+1 <= l-1 ? CoupeOpt(Memo,dist,y-1,x+1,l)->cout:val));
+   
+   return Memo[y][x]=new Node(x,mini+dist->get(y,x),MinChild(Memo,mini,y,x,l));
 
-
-  if(x-1>=0  && x+1<=distances->nColonnes()-1)
-  Memo[y][x]=new Node(x,
-    distances->get(y,x)+
-    min(CoupeOptimale(distances,y-1,x)->cout,min(CoupeOptimale(distances,y-1,x-1)->cout,
-      CoupeOptimale(distances,y-1,x+1)->cout))
-    , MinChild(0,y,x) );
-
-  else if (x-1>=0)
-  {
-    Memo[y][x]=new Node(x,distances->get(y,x)+
-    min(CoupeOptimale(distances,y-1,x)->cout,CoupeOptimale(distances,y-1,x-1)->cout),MinChild(1,y,x));
-
-  }
-  else if (x+1<=distances->nColonnes()-1)
-  {
-    Memo[y][x]=new Node(x,distances->get(y,x)+
-    min(CoupeOptimale(distances,y-1,x)->cout,CoupeOptimale(distances,y-1,x+1)->cout),MinChild(2,y,x));
-
-  }else
-      Memo[y][x]=new Node(x,distances->get(y,x)+
-    CoupeOptimale(distances,y-1,x)->cout,CoupeOptimale(distances,y-1,x));
-
-
-
- return Memo[y][x];
 }
   
-
+s
 int RaccordeurRecursif::calculerRaccord(MatInt2* distances, int* coupe)
 {
+  //Matrice de memorisation
+  Node* **Memo;
   int hauteur = distances->nLignes();
   int largeur = distances->nColonnes();
-  int min=99999999;
+  int cout=INT_MAX;
+  Node* minNode=new Node();
+  
+  //Inialisation de la matrice Memo
+  Memo = new Node* *[hauteur];
+  for(int y = 0; y <hauteur; y++)
+    Memo[y] = new Node*[largeur];
   
   for(int i=0;i<hauteur;i++)
-    for(int j=0;j<largeur;j++)
+   for(int j=0;j<largeur;j++)
       Memo[i][j]=NULL;
 
-  Node* minNode=new Node();
+
+  //Lancer l'algoritme CoupeOpt pour chaqu'une des colonnes de la derniere ligne de la matrice distances
   Node* resultat=new Node();
-  
   for(int x=0;x<largeur;x++){
-   resultat=new Node(CoupeOptimale(distances,hauteur-1,x));
-   if (resultat->cout<min){
-    min=resultat->cout;
+   resultat=new Node(CoupeOpt(Memo,distances,hauteur-1,x,largeur));
+  //Comparer pour stocker le node qui contient le chemin minimum
+   if (resultat->cout<cout){
+    cout=resultat->cout;
     minNode=new Node(resultat);
     }
+ 
  }
+  
+  //remplissage du tableau coupe avec les colonnes de chaque ligne du plus court chemin (stocké dans minNode)
   int y=0;
   while(1){
     coupe[(hauteur-1)-y++]=minNode->x;
@@ -97,10 +84,10 @@ int RaccordeurRecursif::calculerRaccord(MatInt2* distances, int* coupe)
     minNode=minNode->child;
   }
 
-  return min;
+  return cout;
 }
 
 RaccordeurRecursif::~RaccordeurRecursif()
 {
-  // pas de ressources a liberer
+  
 }

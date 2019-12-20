@@ -6,7 +6,7 @@
 #include "raccordeur.h"
 #include "raccordeur_simple.h"
 #include "raccordeur_recursif.h"
-
+#include "raccordeur_iteratif.h"
 
 int main(int argc, char **argv){
 
@@ -18,10 +18,18 @@ int main(int argc, char **argv){
     DescripteurTache tache;
     
     // valeurs par defaut
-    algo = 3;
+    
+
+    printf("Saisir un nombre de 1 à 4\n");
+    printf("1:: RaccordeurSimple avec permutation\n");
+    printf("2:: RaccordeurSimple\n");
+    printf("3:: RaccordeurRecursif\n");
+    printf("4:: RaccordeurIteratif\n");
+    scanf("%d",&algo);
+    //algo = 4;
     tache.fichierImage = "gravier.tif";
-    tache.racineNombreBlocs = 3;
-    tache.recouvrement = 20;
+    tache.racineNombreBlocs = 4;
+    tache.recouvrement = 5;
     tache.largeurSortie = 600;
     tache.hauteurSortie = 600;
     
@@ -73,7 +81,7 @@ int main(int argc, char **argv){
             tache.raccordeur = new RaccordeurRecursif();
             break;
         case 4:
-          
+            tache.raccordeur = new RaccordeurIteratif();
             break;
         case 5:
             

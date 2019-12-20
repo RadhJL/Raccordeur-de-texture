@@ -1,5 +1,5 @@
 #include "textureur.h"
-
+#include "tools.h"
 // ======================
 //  Constructeur
 // ======================
@@ -352,10 +352,10 @@ void Textureur::ajuster_coupe_HB(int c, int l, int* coupe){
 
 int Textureur::randomBlockIndex() {
     if (utiliserPermuteur) {
+        
         return permuteur->suivant();
     } else {
-        return random() % nb_bloc;
-        // ceci n'est pas la meilleur facon de faire un random (voir tools.h)
+        return randomIntervalle(0,nb_bloc-1);
     }
 }
 
@@ -402,7 +402,7 @@ int Textureur::bestBlockIndex(Raccordeur* raccordeur, int vg, int vh) {
                 break;
             }
         }  // switch
-       // printf("Block num %d cout = %d\n",i,cout);
+
         if (cout < coutMin) {
             coutMin = cout;
             res = i;

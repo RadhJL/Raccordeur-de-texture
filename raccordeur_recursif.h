@@ -1,8 +1,8 @@
 #ifndef _RACCORDEUR_RECURSIF_H
 #define	_RACCORDEUR_RECURSIF_H
-
 #include "raccordeur.h"
-#include <utility>
+#include<algorithm>
+#include<climits>
 using namespace std; 
 
 class Node{
@@ -34,8 +34,8 @@ public:
 
 
 class RaccordeurRecursif : public Raccordeur {
-  virtual Node* MinChild(int choice,int y, int x);
-  virtual Node* CoupeOptimale(MatInt2* distances, int y,int x);
+  virtual Node* MinChild(Node* **Memo,int min,int y, int x,int largeur);
+  virtual Node* CoupeOpt(Node* **Memo,MatInt2* distances, int y,int x,int largeur);
   virtual int calculerRaccord(MatInt2* distances, int* coupe);
   virtual ~RaccordeurRecursif(); // destructeur
 
